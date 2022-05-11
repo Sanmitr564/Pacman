@@ -1,0 +1,3 @@
+public enum Tile {
+    WALL, STRAIGHT, JUNCTION, SPECIAL_JUNCTION
+}

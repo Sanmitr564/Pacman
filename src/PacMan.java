@@ -1,58 +1,41 @@
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Color;
 
-//NOTE: Always reset the JVM before compiling (it is the small loop arrow in the
-//bottom right corner of the project window)!!
+import java.util.Arrays;
 
-public class PacMan extends ApplicationAdapter
-{
-    private OrthographicCamera camera; //the camera to our world
-    private Viewport viewport; //maintains the ratios of your world
-    private ShapeRenderer renderer; //used to draw textures and fonts
-    private BitmapFont font; //used to draw fonts (text)
-    private SpriteBatch batch; //also needed to draw fonts (text)
+public class PacMan {
 
-    @Override//called once when we start the game
-    public void create(){
+    private Ghost Blinky;
+    private Ghost Inky;
+    private Ghost Pinky;
+    private Ghost Clyde;
 
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(Global.WORLD_WIDTH, Global.WORLD_HEIGHT, camera);
-        renderer = new ShapeRenderer();
-        font = new BitmapFont();
-        batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer
+    private Player player;
 
+    private Tile[][] board;
+    private Color[][] testBoard;
+
+    public PacMan() {
+        player = new Player();
+        testBoard = new Color[Global.BOARD_ROWS][Global.BOARD_COLS];
+        for (Color[] arr : testBoard) {
+            Arrays.fill(arr, Color.WHITE);
+        }
+        testBoard[0][0] = Color.YELLOW;
     }
 
-    @Override//called 60 times a second
-    public void render(){
-        preRender();
-
-    }
-    @Override
-    public void resize(int width, int height){
-        viewport.update(width, height, true);
+    public Player getPlayer() {
+        return player;
     }
 
-    @Override
-    public void dispose(){
-        renderer.dispose();
-        batch.dispose();
+    public Tile[][] getBoard() {
+        return board;
     }
 
-    public void preRender(){
-        viewport.apply();
+    public Color[][] getTestBoard() {
+        return testBoard;
+    }
 
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float delta = Gdx.graphics.getDeltaTime();//1/60
+    public void update(){
 
-        //draw everything on the screen
-        renderer.setProjectionMatrix(viewport.getCamera().combined);
     }
 }

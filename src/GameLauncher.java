@@ -12,8 +12,7 @@ public class GameLauncher
 
 
         //Create an instance of the class that extends the Game class
-        LwjglApplication launcher = new LwjglApplication(new PacMan(), config);
-
+        LwjglApplication launcher = new LwjglApplication(new FirstDrawing(), config);
 
     }
 }
