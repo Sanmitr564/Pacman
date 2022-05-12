@@ -1,5 +1,6 @@
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,6 +21,8 @@ public class FirstDrawing extends ApplicationAdapter
     private SpriteBatch batch; //also needed to draw fonts (text)
 
     private PacMan pacman;
+
+    private int timer;
     @Override//called once when we start the game
     public void create(){
 
@@ -30,12 +33,17 @@ public class FirstDrawing extends ApplicationAdapter
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer
 
         pacman = new PacMan();
+
+        timer = 0;
     }
 
     @Override//called 60 times a second
     public void render(){
         preRender();
         renderBoard();
+        renderPlayer();
+        pacman.update();
+        input();
     }
     @Override
     public void resize(int width, int height){
@@ -63,14 +71,37 @@ public class FirstDrawing extends ApplicationAdapter
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         for(int row = 0; row < Global.BOARD_ROWS; row++){
             for(int col = 0; col < Global.BOARD_COLS; col++){
-                renderer.setColor(pacman.getTestBoard()[row][col]);
-                renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE + 2), Global.FIELD_Y + row * (Global.TILE_SIZE + 2), Global.TILE_SIZE, Global.TILE_SIZE);
+                renderer.setColor(Color.WHITE);
+                if(row == pacman.getPlayer().getY() && col == pacman.getPlayer().getX()){
+                    renderer.setColor(Color.YELLOW);
+                }
+                renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE + 2), Global.TILE_SIZE, Global.TILE_SIZE);
             }
         }
         renderer.end();
     }
 
-    private void update(){
+    private void renderPlayer(){
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+        renderer.setColor(Color.BLACK);
+        Gdx.gl.glLineWidth(3f);
+        renderer.circle(
+                pacman.getPlayer().getX() * Global.TILE_SIZE + Global.FIELD_X +  /* 2 * pacman.getPlayer().getX() +*/ ((float)pacman.getPlayer().getSection()/Global.TILE_SECTIONS * Global.TILE_SIZE),
+                pacman.getPlayer().getY() * Global.TILE_SIZE + Global.FIELD_Y + Global.TILE_SIZE/2f /* + 2 * pacman.getPlayer().getY()*/,
+                Global.TILE_SIZE/2f
+        );
+        renderer.end();
+    }
 
+    private void input(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            pacman.getPlayer().setQueuedDirection(Direction.UP);
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            pacman.getPlayer().setQueuedDirection(Direction.LEFT);
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            pacman.getPlayer().setQueuedDirection(Direction.RIGHT);
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+            pacman.getPlayer().setQueuedDirection(Direction.DOWN);
+        }
     }
 }

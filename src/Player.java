@@ -6,12 +6,12 @@ public class Player {
     private Direction queuedDirection;
     private int section;
 
-    public Player(){
+    public Player() {
         x = 0;
         y = 0;
         direction = Direction.LEFT;
-        queuedDirection = Direction.LEFT;
-        section = Global.TILE_SECTIONS/2;
+        queuedDirection = Direction.RIGHT;
+        section = Global.TILE_SECTIONS / 2;
     }
 
     //<editor-fold desc="setters & getters">
@@ -42,46 +42,89 @@ public class Player {
     public Direction getDirection() {
         return direction;
     }
+
+    public int getSection() {
+        return section;
+    }
+
+    public void setSection(int section) {
+        this.section = section;
+    }
+
     //</editor-fold>
 
-    public void move(Tile[][] board){
-        if(section == Global.TILE_SECTIONS/2){
-            tryChangeDirection(board);
-
-        }
-
-    }
-
-    private int[] getOffsets(Direction d){
-        //[rowOffset][colOffset]
-        switch(d){
-            case DOWN -> {
-                return new int[] {-1,0};
+    public void move(Tile[][] board) {
+        if (section == Global.TILE_SECTIONS / 2) {
+            if (direction != queuedDirection) {
+                tryChangeDirection(board);
             }
-            case LEFT -> {
-                return new int[] {0,-1};
-            }
-            case RIGHT -> {
-                return new int[] {0,1};
-            }
-            default -> {
-                return new int[] {1,0};
-            }
-        }
-    }
-
-    private void tryChangeDirection(Tile[][] board){
-        if (direction != queuedDirection) {
-            Tile t;
-            try {
-                int[] offset = getOffsets(queuedDirection);
-                t = board[y + offset[0]][x + offset[1]];
-            } catch (ArrayIndexOutOfBoundsException e) {
+            Tile t = tryGetTile(board, direction);
+            if ( /*t == Tile.WALL ||*/ t == null) {
                 return;
             }
-            if(t != Tile.WALL && t!= null){
-                direction = queuedDirection;
+        }
+
+        switch (direction) {
+            case UP, RIGHT -> section++;
+            case LEFT, DOWN -> section--;
+        }
+
+        if (section >= Global.TILE_SECTIONS || section < 0) {
+            switch (direction) {
+                case RIGHT -> x++;
+                case LEFT -> x--;
+                case UP -> y++;
+                case DOWN -> y--;
             }
+            section = section < 0 ? section + Global.TILE_SECTIONS : section % Global.TILE_SECTIONS;
+        }
+
+        System.out.println("Section: " + section);
+        System.out.println("X: " + x);
+        System.out.println("Y: " + y);
+
+    }
+
+    private int[] getOffsets(Direction d) {
+        //[rowOffset][colOffset]
+        switch (d) {
+            case DOWN -> {
+                return new int[]{-1, 0};
+            }
+            case LEFT -> {
+                return new int[]{0, -1};
+            }
+            case RIGHT -> {
+                return new int[]{0, 1};
+            }
+            default -> {
+                return new int[]{1, 0};
+            }
+        }
+    }
+
+    private void tryChangeDirection(Tile[][] board) {
+        Tile t = tryGetTile(board);
+        if (t != Tile.WALL && t != null) {
+            direction = queuedDirection;
+        }
+    }
+
+    private Tile tryGetTile(Tile[][] board) {
+        try {
+            int[] offset = getOffsets(queuedDirection);
+            return board[y + offset[0]][x + offset[1]];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    private Tile tryGetTile(Tile[][] board, Direction d) {
+        try {
+            int[] offset = getOffsets(d);
+            return board[y + offset[0]][x + offset[1]];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
         }
     }
 }

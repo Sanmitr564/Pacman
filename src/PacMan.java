@@ -17,10 +17,10 @@ public class PacMan {
     public PacMan() {
         player = new Player();
         testBoard = new Color[Global.BOARD_ROWS][Global.BOARD_COLS];
-        for (Color[] arr : testBoard) {
-            Arrays.fill(arr, Color.WHITE);
+        board = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
+        for (Tile[] arr : board) {
+            Arrays.fill(arr, Tile.STRAIGHT);
         }
-        testBoard[0][0] = Color.YELLOW;
     }
 
     public Player getPlayer() {
@@ -36,6 +36,6 @@ public class PacMan {
     }
 
     public void update(){
-
+        player.move(board);
     }
 }

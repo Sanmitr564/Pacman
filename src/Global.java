@@ -1,8 +1,8 @@
 public class Global {
-    public static final int WORLD_WIDTH = 1920 / 2;
-    public static final int WORLD_HEIGHT = 1080 / 2;
+    public static final int WORLD_WIDTH = 1920;
+    public static final int WORLD_HEIGHT = 1080;
 
-    public static final int TILE_SIZE = 10;
+    public static final int TILE_SIZE = 30;
 
     public static final int BOARD_ROWS = 31;
     public static final int BOARD_COLS = 28;
