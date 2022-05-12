@@ -16,7 +16,7 @@ public class Ghost {
         return color;
     }
 
-    protected Direction chooseDirection(int targetX, int targetY){
+    protected Direction chooseDirection(int targetX, int targetY) {
         return null;
     }
 }

@@ -35,7 +35,7 @@ public class PacMan {
         return testBoard;
     }
 
-    public void update(){
+    public void update() {
         player.move(board);
     }
 }
