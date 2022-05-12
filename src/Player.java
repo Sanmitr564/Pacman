@@ -127,4 +127,13 @@ public class Player {
             return null;
         }
     }
+
+    public float[] getTileOffsets() {//{xOffset, yOffset}
+        return switch (direction) {
+            case DOWN, UP ->
+                    new float[]{Global.TILE_SIZE / 2f, (float) section / Global.TILE_SECTIONS * Global.TILE_SIZE};
+            case LEFT, RIGHT ->
+                    new float[]{(float) section / Global.TILE_SECTIONS * Global.TILE_SIZE, Global.TILE_SIZE / 2f};
+        };
+    }
 }

@@ -75,7 +75,7 @@ public class FirstDrawing extends ApplicationAdapter
                 if(row == pacman.getPlayer().getY() && col == pacman.getPlayer().getX()){
                     renderer.setColor(Color.YELLOW);
                 }
-                renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE + 2), Global.TILE_SIZE, Global.TILE_SIZE);
+                renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE), Global.TILE_SIZE, Global.TILE_SIZE);
             }
         }
         renderer.end();
@@ -85,9 +85,10 @@ public class FirstDrawing extends ApplicationAdapter
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.BLACK);
         Gdx.gl.glLineWidth(3f);
+        float[] tileOffsets = pacman.getPlayer().getTileOffsets();
         renderer.circle(
-                pacman.getPlayer().getX() * Global.TILE_SIZE + Global.FIELD_X +  /* 2 * pacman.getPlayer().getX() +*/ ((float)pacman.getPlayer().getSection()/Global.TILE_SECTIONS * Global.TILE_SIZE),
-                pacman.getPlayer().getY() * Global.TILE_SIZE + Global.FIELD_Y + Global.TILE_SIZE/2f /* + 2 * pacman.getPlayer().getY()*/,
+                pacman.getPlayer().getX() * Global.TILE_SIZE + Global.FIELD_X +  /* 2 * pacman.getPlayer().getX() +*/ tileOffsets[0],
+                pacman.getPlayer().getY() * Global.TILE_SIZE + Global.FIELD_Y + tileOffsets[1] /* + 2 * pacman.getPlayer().getY()*/,
                 Global.TILE_SIZE/2f
         );
         renderer.end();
