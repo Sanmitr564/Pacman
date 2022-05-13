@@ -6,6 +6,7 @@ public class GameLauncher
     public static void main(String[] args)
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = "PAC-MAN";
         config.width = Global.WORLD_WIDTH;//set the width of your screen window
         config.height = Global.WORLD_HEIGHT; //set the height of your screen window
         //keep these the same ratio as your WORLD UNITS!!!!!!!!!!
