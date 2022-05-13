@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import java.io.FileNotFoundException;
+
 //NOTE: Always reset the JVM before compiling (it is the small loop arrow in the
 //bottom right corner of the project window)!!
 
@@ -21,8 +23,6 @@ public class FirstDrawing extends ApplicationAdapter {
 
     private PacMan pacman;
 
-    private int timer;
-
     @Override//called once when we start the game
     public void create() {
 
@@ -32,18 +32,20 @@ public class FirstDrawing extends ApplicationAdapter {
         font = new BitmapFont();
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer
 
-        pacman = new PacMan();
-
-        timer = 0;
+        try {
+            pacman = new PacMan();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override//called 60 times a second
     public void render() {
+        input();
         preRender();
         renderBoard();
         renderPlayer();
         pacman.update();
-        input();
     }
 
     @Override
@@ -72,9 +74,14 @@ public class FirstDrawing extends ApplicationAdapter {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int row = 0; row < Global.BOARD_ROWS; row++) {
             for (int col = 0; col < Global.BOARD_COLS; col++) {
-                renderer.setColor(Color.WHITE);
-                if (row == pacman.getPlayer().getY() && col == pacman.getPlayer().getX()) {
-                    renderer.setColor(Color.YELLOW);
+
+                switch(pacman.getBoard()[row][col]){
+                    case WALL -> renderer.setColor(Color.BLUE);
+                    case STRAIGHT -> renderer.setColor(Color.BLACK);
+                    case JUNCTION -> renderer.setColor(Color.CYAN);
+                    case SPECIAL_JUNCTION -> renderer.setColor(Color.PINK);
+                    case TELEPORT -> renderer.setColor(Color.WHITE);
+                    default -> renderer.setColor(Color.GREEN);
                 }
                 renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE), Global.TILE_SIZE, Global.TILE_SIZE);
             }
@@ -83,9 +90,9 @@ public class FirstDrawing extends ApplicationAdapter {
     }
 
     private void renderPlayer() {
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-        renderer.setColor(Color.BLACK);
-        Gdx.gl.glLineWidth(3f);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(Color.YELLOW);
+        //Gdx.gl.glLineWidth(3f);
         float[] tileOffsets = pacman.getPlayer().getTileOffsets();
         renderer.circle(
                 pacman.getPlayer().getX() * Global.TILE_SIZE + Global.FIELD_X +  /* 2 * pacman.getPlayer().getX() +*/ tileOffsets[0],
