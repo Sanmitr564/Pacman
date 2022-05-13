@@ -1,6 +1,9 @@
 import com.badlogic.gdx.graphics.Color;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class PacMan {
 
@@ -12,15 +15,11 @@ public class PacMan {
     private Player player;
 
     private Tile[][] board;
-    private Color[][] testBoard;
 
-    public PacMan() {
+    public PacMan() throws FileNotFoundException {
         player = new Player();
-        testBoard = new Color[Global.BOARD_ROWS][Global.BOARD_COLS];
         board = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
-        for (Tile[] arr : board) {
-            Arrays.fill(arr, Tile.STRAIGHT);
-        }
+        initializeBoard();
     }
 
     public Player getPlayer() {
@@ -31,11 +30,23 @@ public class PacMan {
         return board;
     }
 
-    public Color[][] getTestBoard() {
-        return testBoard;
+    private void initializeBoard() throws FileNotFoundException {
+        File file = new File("C:/Users/Sanmitr/Documents/IdeaProjects/Pacman/src/ghostMap.txt");
+        Scanner scanner = new Scanner(file);
+        int row = Global.BOARD_ROWS-1;
+        while (scanner.hasNextLine()) {
+            String str = scanner.nextLine();
+            for (int col = 0; col < str.length(); col++) {
+                char value = str.charAt(col);
+                int num = Integer.parseInt(String.valueOf(value));
+                board[row][col] = Tile.values()[num];
+            }
+            row--;
+        }
     }
 
     public void update() {
         player.move(board);
     }
+
 }
