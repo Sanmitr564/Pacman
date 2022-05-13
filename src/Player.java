@@ -7,11 +7,11 @@ public class Player {
     private int section;
 
     public Player() {
-        x = 0;
-        y = 0;
+        x = 1;
+        y = 1;
         direction = Direction.LEFT;
         queuedDirection = Direction.RIGHT;
-        section = Global.TILE_SECTIONS / 2;
+        section = Global.PLAYER_TILE_SECTIONS / 2;
     }
 
     //<editor-fold desc="setters & getters">
@@ -54,14 +54,16 @@ public class Player {
     //</editor-fold>
 
     public void move(Tile[][] board) {
-        if (section == Global.TILE_SECTIONS / 2) {
+        if (section == Global.PLAYER_TILE_SECTIONS / 2) {
             if (direction != queuedDirection) {
                 tryChangeDirection(board);
             }
             Tile t = tryGetTile(board, direction);
-            if ( /*t == Tile.WALL ||*/ t == null) {
+            if ( t == Tile.WALL || t == null) {
                 return;
             }
+        } else if (DirectionHelp.oppositeDirections(direction, queuedDirection)) {
+            tryChangeDirection(board);
         }
 
         switch (direction) {
@@ -69,14 +71,14 @@ public class Player {
             case LEFT, DOWN -> section--;
         }
 
-        if (section >= Global.TILE_SECTIONS || section < 0) {
+        if (section >= Global.PLAYER_TILE_SECTIONS || section < 0) {
             switch (direction) {
                 case RIGHT -> x++;
                 case LEFT -> x--;
                 case UP -> y++;
                 case DOWN -> y--;
             }
-            section = section < 0 ? section + Global.TILE_SECTIONS : section % Global.TILE_SECTIONS;
+            section = section < 0 ? section + Global.PLAYER_TILE_SECTIONS : section % Global.PLAYER_TILE_SECTIONS;
         }
 
         System.out.println("Section: " + section);
@@ -131,9 +133,9 @@ public class Player {
     public float[] getTileOffsets() {//{xOffset, yOffset}
         return switch (direction) {
             case DOWN, UP ->
-                    new float[]{Global.TILE_SIZE / 2f, (float) section / Global.TILE_SECTIONS * Global.TILE_SIZE};
+                    new float[]{Global.TILE_SIZE / 2f, (float) section / Global.PLAYER_TILE_SECTIONS * Global.TILE_SIZE};
             case LEFT, RIGHT ->
-                    new float[]{(float) section / Global.TILE_SECTIONS * Global.TILE_SIZE, Global.TILE_SIZE / 2f};
+                    new float[]{(float) section / Global.PLAYER_TILE_SECTIONS * Global.TILE_SIZE, Global.TILE_SIZE / 2f};
         };
     }
 }
