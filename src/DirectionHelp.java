@@ -1,11 +1,39 @@
 public class DirectionHelp {
     public static boolean oppositeDirections(Direction d1, Direction d2) {
-        if (
-                ((d1 == Direction.LEFT && d2 == Direction.RIGHT) || (d2 == Direction.LEFT && d1 == Direction.RIGHT)) ||
-                        ((d1 == Direction.UP && d2 == Direction.DOWN) || (d2 == Direction.UP && d1 == Direction.DOWN))
-        ){
-            return true;
+        return d1 == getOppositeDirection(d2);
+    }
+
+    public static int[] getOffsets(Direction d) {//{yOffset, xOffset}
+        switch (d) {
+            case DOWN -> {
+                return new int[]{-1, 0};
+            }
+            case LEFT -> {
+                return new int[]{0, -1};
+            }
+            case RIGHT -> {
+                return new int[]{0, 1};
+            }
+            default -> {
+                return new int[]{1, 0};
+            }
         }
-        return false;
+    }
+
+    public static Direction getOppositeDirection(Direction d){
+        switch (d){
+            case UP -> {
+                return Direction.DOWN;
+            }
+            case LEFT -> {
+                return Direction.RIGHT;
+            }
+            case RIGHT -> {
+                return Direction.LEFT;
+            }
+            default -> {
+                return Direction.UP;
+            }
+        }
     }
 }
