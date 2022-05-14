@@ -45,6 +45,7 @@ public class FirstDrawing extends ApplicationAdapter {
         preRender();
         renderBoard();
         renderPlayer();
+        renderGhost();
         pacman.update();
     }
 
@@ -75,13 +76,16 @@ public class FirstDrawing extends ApplicationAdapter {
         for (int row = 0; row < Global.BOARD_ROWS; row++) {
             for (int col = 0; col < Global.BOARD_COLS; col++) {
 
-                switch(pacman.getBoard()[row][col]){
+                switch(pacman.getPlayerBoard()[row][col]){
                     case WALL -> renderer.setColor(Color.BLUE);
                     case STRAIGHT -> renderer.setColor(Color.BLACK);
                     case JUNCTION -> renderer.setColor(Color.CYAN);
                     case SPECIAL_JUNCTION -> renderer.setColor(Color.PINK);
                     case TELEPORT -> renderer.setColor(Color.WHITE);
                     default -> renderer.setColor(Color.GREEN);
+                }
+                if(pacman.getBlinky().getX() == col && pacman.getBlinky().getY() == row){
+                    renderer.setColor(Color.RED);
                 }
                 renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE), Global.TILE_SIZE, Global.TILE_SIZE);
             }
@@ -95,8 +99,8 @@ public class FirstDrawing extends ApplicationAdapter {
         //Gdx.gl.glLineWidth(3f);
         float[] tileOffsets = pacman.getPlayer().getTileOffsets();
         renderer.circle(
-                pacman.getPlayer().getX() * Global.TILE_SIZE + Global.FIELD_X +  /* 2 * pacman.getPlayer().getX() +*/ tileOffsets[0],
-                pacman.getPlayer().getY() * Global.TILE_SIZE + Global.FIELD_Y + tileOffsets[1] /* + 2 * pacman.getPlayer().getY()*/,
+                pacman.getPlayer().getX() * Global.TILE_SIZE + Global.FIELD_X + tileOffsets[0],
+                pacman.getPlayer().getY() * Global.TILE_SIZE + Global.FIELD_Y + tileOffsets[1],
                 Global.TILE_SIZE / 2f
         );
         renderer.end();
@@ -112,5 +116,18 @@ public class FirstDrawing extends ApplicationAdapter {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             pacman.getPlayer().setQueuedDirection(Direction.DOWN);
         }
+    }
+
+    private void renderGhost() {
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(Color.RED);
+        //Gdx.gl.glLineWidth(3f);
+        float[] tileOffsets = pacman.getBlinky().getTileOffsets();
+        renderer.circle(
+                pacman.getBlinky().getX() * Global.TILE_SIZE + Global.FIELD_X + tileOffsets[0],
+                pacman.getBlinky().getY() * Global.TILE_SIZE + Global.FIELD_Y + tileOffsets[1],
+                Global.TILE_SIZE / 2f
+        );
+        renderer.end();
     }
 }
