@@ -1,8 +1,5 @@
-import com.badlogic.gdx.graphics.Color;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class PacMan {
@@ -14,20 +11,25 @@ public class PacMan {
 
     private Player player;
 
-    private Tile[][] board;
+    private Tile[][] playerBoard;
 
     public PacMan() throws FileNotFoundException {
         player = new Player();
-        board = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
+        playerBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
         initializeBoard();
+        Blinky = new Ghost(1,1, Direction.RIGHT, 25, 25);
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public Tile[][] getBoard() {
-        return board;
+    public Ghost getBlinky() {
+        return Blinky;
+    }
+
+    public Tile[][] getPlayerBoard() {
+        return playerBoard;
     }
 
     private void initializeBoard() throws FileNotFoundException {
@@ -39,14 +41,15 @@ public class PacMan {
             for (int col = 0; col < str.length(); col++) {
                 char value = str.charAt(col);
                 int num = Integer.parseInt(String.valueOf(value));
-                board[row][col] = Tile.values()[num];
+                playerBoard[row][col] = Tile.values()[num];
             }
             row--;
         }
     }
 
     public void update() {
-        player.move(board);
+        player.move(playerBoard);
+        Blinky.move(playerBoard, player);
     }
 
 }
