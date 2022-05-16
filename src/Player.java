@@ -7,8 +7,8 @@ public class Player {
     private int section;
 
     public Player() {
-        x = 1;
-        y = 1;
+        x = 26;
+        y = 29;
         direction = Direction.LEFT;
         queuedDirection = Direction.RIGHT;
         section = Global.PLAYER_TILE_SECTIONS / 2;
@@ -81,29 +81,13 @@ public class Player {
             section = section < 0 ? section + Global.PLAYER_TILE_SECTIONS : section % Global.PLAYER_TILE_SECTIONS;
         }
 
-        System.out.println("Section: " + section);
+        /*System.out.println("Section: " + section);
         System.out.println("X: " + x);
-        System.out.println("Y: " + y);
+        System.out.println("Y: " + y);*/
 
     }
 
-    private int[] getOffsets(Direction d) {
-        //[rowOffset][colOffset]
-        switch (d) {
-            case DOWN -> {
-                return new int[]{-1, 0};
-            }
-            case LEFT -> {
-                return new int[]{0, -1};
-            }
-            case RIGHT -> {
-                return new int[]{0, 1};
-            }
-            default -> {
-                return new int[]{1, 0};
-            }
-        }
-    }
+
 
     private void tryChangeDirection(Tile[][] board) {
         Tile t = tryGetTile(board);
@@ -114,7 +98,7 @@ public class Player {
 
     private Tile tryGetTile(Tile[][] board) {
         try {
-            int[] offset = getOffsets(queuedDirection);
+            int[] offset = DirectionHelp.getOffsets(queuedDirection);
             return board[y + offset[0]][x + offset[1]];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -123,7 +107,7 @@ public class Player {
 
     private Tile tryGetTile(Tile[][] board, Direction d) {
         try {
-            int[] offset = getOffsets(d);
+            int[] offset = DirectionHelp.getOffsets(d);
             return board[y + offset[0]][x + offset[1]];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
