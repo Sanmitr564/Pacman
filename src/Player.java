@@ -59,7 +59,7 @@ public class Player {
                 tryChangeDirection(board);
             }
             Tile t = tryGetTile(board, direction);
-            if ( t == Tile.WALL || t == null) {
+            if (t == Tile.WALL || t == null) {
                 return;
             }
         } else if (DirectionHelp.oppositeDirections(direction, queuedDirection)) {
@@ -86,7 +86,6 @@ public class Player {
         System.out.println("Y: " + y);*/
 
     }
-
 
 
     private void tryChangeDirection(Tile[][] board) {
