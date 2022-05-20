@@ -13,12 +13,6 @@ public class Global {
     public static final int FIELD_X = (WORLD_WIDTH - BOARD_WIDTH) / 2;
     public static final int FIELD_Y = (WORLD_HEIGHT - BOARD_HEIGHT) / 2;
 
-    //<editor-fold desc="standard pacman board layout">
-    public static final Tile[][] DEFAULT_BOARD = new Tile[28][31];
-            
-    //</editor-fold>
-
-    public static final int PLAYER_TILE_SECTIONS = 25;
-    public static final float TILE_OFFSETS = (float) TILE_SIZE / PLAYER_TILE_SECTIONS;
+    public static final int PLAYER_TILE_SECTIONS = 15;
 
 }
