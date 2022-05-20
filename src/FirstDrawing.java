@@ -128,6 +128,13 @@ public class FirstDrawing extends ApplicationAdapter {
                 pacman.getBlinky().getY() * Global.TILE_SIZE + Global.FIELD_Y + tileOffsets[1],
                 Global.TILE_SIZE / 2f
         );
+        renderer.setColor(Color.BLUE);
+        tileOffsets = pacman.getInky().getTileOffsets();
+        renderer.circle(
+                pacman.getInky().getX() * Global.TILE_SIZE + Global.FIELD_X + tileOffsets[0],
+                pacman.getInky().getY() * Global.TILE_SIZE + Global.FIELD_Y + tileOffsets[1],
+                Global.TILE_SIZE / 2f
+        );
         renderer.end();
     }
 }
