@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public class PacMan {
 
-    private Ghost Blinky;
-    private Ghost Inky;
-    private Ghost Pinky;
-    private Ghost Clyde;
+    private Blinky blinky;
+    private Inky inky;
+    private Ghost pinky;
+    private Ghost clyde;
 
     private Player player;
 
@@ -17,7 +17,8 @@ public class PacMan {
         player = new Player();
         playerBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
         initializeBoard();
-        Blinky = new Ghost(1,1, Direction.RIGHT, 25, 25);
+        blinky = new Blinky(1, 1, Direction.RIGHT, 25, 25);
+        inky = new Inky(1, 26, Direction.RIGHT, 25, 25);
     }
 
     public Player getPlayer() {
@@ -25,7 +26,11 @@ public class PacMan {
     }
 
     public Ghost getBlinky() {
-        return Blinky;
+        return blinky;
+    }
+
+    public Ghost getInky() {
+        return inky;
     }
 
     public Tile[][] getPlayerBoard() {
@@ -35,7 +40,7 @@ public class PacMan {
     private void initializeBoard() throws FileNotFoundException {
         File file = new File("C:/Users/Sanmitr/Documents/IdeaProjects/Pacman/src/ghostMap.txt");
         Scanner scanner = new Scanner(file);
-        int row = Global.BOARD_ROWS-1;
+        int row = Global.BOARD_ROWS - 1;
         while (scanner.hasNextLine()) {
             String str = scanner.nextLine();
             for (int col = 0; col < str.length(); col++) {
@@ -49,7 +54,8 @@ public class PacMan {
 
     public void update() {
         player.move(playerBoard);
-        Blinky.move(playerBoard, player);
+        blinky.update(playerBoard, player);
+        inky.update(playerBoard, player, blinky);
     }
 
 }
