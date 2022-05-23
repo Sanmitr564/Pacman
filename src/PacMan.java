@@ -6,8 +6,8 @@ public class PacMan {
 
     private Blinky blinky;
     private Inky inky;
-    private Ghost pinky;
-    private Ghost clyde;
+    private Pinky pinky;
+    private Clyde clyde;
 
     private Player player;
 
@@ -18,7 +18,9 @@ public class PacMan {
         playerBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
         initializeBoard();
         blinky = new Blinky(1, 1, Direction.RIGHT, 25, 25);
-        inky = new Inky(1, 26, Direction.RIGHT, 25, 25);
+        inky = new Inky(1, 27, Direction.DOWN, 25, 25);
+        pinky = new Pinky(20, 1, Direction.LEFT, 25, 25);
+        clyde = new Clyde(1, 1, Direction.RIGHT, 25, 25);
     }
 
     public Player getPlayer() {
@@ -29,8 +31,16 @@ public class PacMan {
         return blinky;
     }
 
+    public Ghost getPinky() {
+        return pinky;
+    }
+
     public Ghost getInky() {
         return inky;
+    }
+
+    public Clyde getClyde() {
+        return clyde;
     }
 
     public Tile[][] getPlayerBoard() {
@@ -56,6 +66,8 @@ public class PacMan {
         player.move(playerBoard);
         blinky.update(playerBoard, player);
         inky.update(playerBoard, player, blinky);
+        pinky.update(playerBoard, player);
+        clyde.update(playerBoard, player, blinky);
     }
 
 }
