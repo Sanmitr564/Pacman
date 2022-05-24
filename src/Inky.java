@@ -1,14 +1,16 @@
 public class Inky extends Ghost{
 
-    public Inky(int x, int y, Direction direction, int section, int numSections){
-        super(x, y, direction, section, numSections);
+    public Inky(int x, int y, Direction direction, int section, int numSections, boolean released){
+        super(x, y, direction, section, numSections, released);
     }
 
     public void update(Tile[][] board, Player player, Blinky blinky){
         int[] offsets = DirectionHelp.getOffsets(player.getDirection());
-        int targetRow = (player.getY() + offsets[0] - blinky.getY()) + player.getY();
-        int targetCol = (player.getX() + offsets[1] - blinky.getX()) + player.getX();
+        int targetRow = (player.getY() + 2*offsets[0] - blinky.getY()) + player.getY();
+        int targetCol = (player.getX() + 2*offsets[1] - blinky.getX()) + player.getX();
         updateDirection(board, targetRow, targetCol);
-        move();
+        if(isReleased()){
+            move();
+        }
     }
 }

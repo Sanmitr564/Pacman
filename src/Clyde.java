@@ -1,13 +1,12 @@
 public class Clyde extends Ghost{
 
-    public Clyde(int x, int y, Direction direction, int section, int numSections){
-        super(x, y, direction, section, numSections);
+    public Clyde(int x, int y, Direction direction, int section, int numSections, boolean released){
+        super(x, y, direction, section, numSections, released);
     }
 
 
     public void update(Tile[][] board, Player player, Blinky blinky) {
-        System.out.println(Math.abs(player.getX() - getX()) + Math.abs(player.getY() - getY()));
-        if(Math.abs(player.getX() - getX()) + Math.abs(player.getY() - getY()) < 4){
+        if(Math.abs(player.getX() - getX()) + Math.abs(player.getY() - getY()) < 8){
             updateDirection(board, 0, 0);
         }else{
             int[] offsets = DirectionHelp.getOffsets(player.getDirection());
@@ -15,6 +14,8 @@ public class Clyde extends Ghost{
             int targetCol = (player.getX() + offsets[1] - blinky.getX()) + player.getX();
             updateDirection(board, targetRow, targetCol);
         }
-        move();
+        if(isReleased()){
+            move();
+        }
     }
 }
