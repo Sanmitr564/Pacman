@@ -1,6 +1,7 @@
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,7 +15,7 @@ import java.io.FileNotFoundException;
 //NOTE: Always reset the JVM before compiling (it is the small loop arrow in the
 //bottom right corner of the project window)!!
 
-public class FirstDrawing extends ApplicationAdapter {
+public class FirstDrawing extends ApplicationAdapter implements InputProcessor {
     private OrthographicCamera camera; //the camera to our world
     private Viewport viewport; //maintains the ratios of your world
     private ShapeRenderer renderer; //used to draw textures and fonts
@@ -37,11 +38,12 @@ public class FirstDrawing extends ApplicationAdapter {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override//called 60 times a second
     public void render() {
-        input();
         preRender();
         renderBoard();
         renderPlayer();
@@ -82,10 +84,8 @@ public class FirstDrawing extends ApplicationAdapter {
                     case JUNCTION -> renderer.setColor(Color.CYAN);
                     case SPECIAL_JUNCTION -> renderer.setColor(Color.PINK);
                     case TELEPORT -> renderer.setColor(Color.WHITE);
+                    case SMALL_PELLET -> renderer.setColor(Color.OLIVE);
                     default -> renderer.setColor(Color.GREEN);
-                }
-                if(pacman.getBlinky().getX() == col && pacman.getBlinky().getY() == row){
-                    renderer.setColor(Color.RED);
                 }
                 renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE), Global.TILE_SIZE, Global.TILE_SIZE);
             }
@@ -104,18 +104,6 @@ public class FirstDrawing extends ApplicationAdapter {
                 Global.TILE_SIZE / 2f
         );
         renderer.end();
-    }
-
-    private void input() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            pacman.getPlayer().setQueuedDirection(Direction.UP);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            pacman.getPlayer().setQueuedDirection(Direction.LEFT);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            pacman.getPlayer().setQueuedDirection(Direction.RIGHT);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            pacman.getPlayer().setQueuedDirection(Direction.DOWN);
-        }
     }
 
     private void renderGhost() {
@@ -151,4 +139,52 @@ public class FirstDrawing extends ApplicationAdapter {
         );
         renderer.end();
     }
+
+    @Override
+    public boolean keyDown(int i) {
+        switch(i){
+            case Input.Keys.UP -> pacman.getPlayer().setQueuedDirection(Direction.UP);
+            case Input.Keys.LEFT -> pacman.getPlayer().setQueuedDirection(Direction.LEFT);
+            case Input.Keys.RIGHT -> pacman.getPlayer().setQueuedDirection(Direction.RIGHT);
+            case Input.Keys.DOWN -> pacman.getPlayer().setQueuedDirection(Direction.DOWN);
+        }
+        return false;
+    }
+
+    //<editor-fold desc="unused InputProcessor methods">
+    @Override
+    public boolean keyUp(int i) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char c) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int i, int i1, int i2, int i3) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int i, int i1, int i2, int i3) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int i, int i1, int i2) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int i, int i1) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int i) {
+        return false;
+    }
+    //</editor-fold>
 }
