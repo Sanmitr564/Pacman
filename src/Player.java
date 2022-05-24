@@ -6,12 +6,15 @@ public class Player {
     private Direction queuedDirection;
     private int section;
 
+    private int consumedSmallPellets;
+
     public Player() {
         x = 26;
         y = 29;
         direction = Direction.LEFT;
         queuedDirection = Direction.RIGHT;
         section = Global.PLAYER_TILE_SECTIONS / 2;
+        consumedSmallPellets = 0;
     }
 
     //<editor-fold desc="setters & getters">
@@ -55,6 +58,12 @@ public class Player {
 
     public void move(Tile[][] board) {
         if (section == Global.PLAYER_TILE_SECTIONS / 2) {
+            if(board[y][x] == Tile.TELEPORT){
+                switch (x) {
+                    case 0 -> x = 27;
+                    case 27 -> x = 0;
+                }
+            }
             if (direction != queuedDirection) {
                 tryChangeDirection(board);
             }
@@ -79,14 +88,20 @@ public class Player {
                 case DOWN -> y--;
             }
             section = section < 0 ? section + Global.PLAYER_TILE_SECTIONS : section % Global.PLAYER_TILE_SECTIONS;
+            if(board[y][x] == Tile.SMALL_PELLET){
+                consumeSmallPellet(board);
+            }
         }
-
-        /*System.out.println("Section: " + section);
-        System.out.println("X: " + x);
-        System.out.println("Y: " + y);*/
-
     }
 
+    public void consumeSmallPellet(Tile[][] board){
+        consumedSmallPellets++;
+        board[y][x] = Tile.STRAIGHT;
+    }
+
+    public int getConsumedSmallPellets() {
+        return consumedSmallPellets;
+    }
 
     private void tryChangeDirection(Tile[][] board) {
         Tile t = tryGetTile(board);
