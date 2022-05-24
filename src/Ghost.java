@@ -11,15 +11,17 @@ public class Ghost {
     private Direction direction;
 
     private int section;
+    private boolean released;
     private int numSections;
 
-    public Ghost(int x, int y, Direction direction, int section, int numSections) {
+    public Ghost(int x, int y, Direction direction, int section, int numSections, boolean released) {
         this.x = x;
         this.y = y;
         //this.texture = texture;
         this.section = section;
         this.direction = direction;
         this.numSections = numSections;
+        this.released = released;
     }
 
     public int getX() {
@@ -30,9 +32,15 @@ public class Ghost {
         return y;
     }
 
+    public boolean isReleased() {
+        return released;
+    }
+
     public void update(Tile[][] board, Player player) {
         updateDirection(board, player.getY(), player.getX());
-        move();
+        if(released){
+            move();
+        }
     }
 
     protected void move() {
@@ -198,5 +206,13 @@ public class Ghost {
             case DOWN, UP -> new float[]{Global.TILE_SIZE / 2f, (float) section / numSections * Global.TILE_SIZE};
             case LEFT, RIGHT -> new float[]{(float) section / numSections * Global.TILE_SIZE, Global.TILE_SIZE / 2f};
         };
+    }
+
+    public void release(){
+        released = true;
+        x = 14;
+        y = 19;
+        section = 0;
+        direction = Direction.LEFT;
     }
 }
