@@ -36,4 +36,8 @@ public class DirectionHelp {
             }
         }
     }
+
+    public static boolean isVertical(Direction d){
+        return d == Direction.UP || d == Direction.DOWN;
+    }
 }
