@@ -1,16 +1,14 @@
 public class Pinky extends Ghost{
 
-    public Pinky(int x, int y, Direction direction, int section, int numSections, boolean released){
-        super(x, y, direction, section, numSections, released);
+    public Pinky(int x, int y, Direction direction, int section, int numSections, boolean released, boolean isExiting){
+        super(x, y, direction, section, numSections, released, isExiting);
     }
 
-    public void update(Tile[][] board, Player player){
+    @Override
+    protected void setTargetPos(Player player, Blinky blinky) {
         int[] offsets = DirectionHelp.getOffsets(player.getDirection());
-        int targetRow = player.getY() + offsets[0] * 4;
-        int targetCol = player.getX() + offsets[1] * 4;
-        updateDirection(board, targetRow, targetCol);
-        if(isReleased()){
-            move();
-        }
+        setTargetRow(player.getY() + offsets[0] * 4);
+        setTargetCol(player.getX() + offsets[1] * 4);
     }
+
 }
