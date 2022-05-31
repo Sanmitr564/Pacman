@@ -7,14 +7,20 @@ public class Player {
     private int section;
 
     private int consumedSmallPellets;
+    private int numLives;
+    private boolean isEnergized;
+    private Timer energizeTimer;
 
     public Player() {
-        x = 26;
-        y = 29;
+        x = 14;
+        y = 7;
         direction = Direction.LEFT;
-        queuedDirection = Direction.RIGHT;
+        queuedDirection = Direction.LEFT;
         section = Global.PLAYER_TILE_SECTIONS / 2;
         consumedSmallPellets = 0;
+        numLives = 3;
+        isEnergized = false;
+        energizeTimer = new Timer();
     }
 
     //<editor-fold desc="setters & getters">
@@ -57,8 +63,12 @@ public class Player {
     //</editor-fold>
 
     public void move(Tile[][] board) {
+        if (energizeTimer.getSeconds() == 5) {
+            energizeTimer.reset();
+            isEnergized = false;
+        }
         if (section == Global.PLAYER_TILE_SECTIONS / 2) {
-            if(board[y][x] == Tile.TELEPORT){
+            if (board[y][x] == Tile.TELEPORT) {
                 switch (x) {
                     case 0 -> x = 27;
                     case 27 -> x = 0;
@@ -74,6 +84,13 @@ public class Player {
         } else if (DirectionHelp.oppositeDirections(direction, queuedDirection)) {
             tryChangeDirection(board);
         }
+        if (board[y][x] == Tile.SMALL_PELLET) {
+            consumeSmallPellet(board);
+            return;
+        } else if (board[y][x] == Tile.BIG_PELLET) {
+            isEnergized = true;
+            energizeTimer.start();
+        }
 
         switch (direction) {
             case UP, RIGHT -> section++;
@@ -88,15 +105,14 @@ public class Player {
                 case DOWN -> y--;
             }
             section = section < 0 ? section + Global.PLAYER_TILE_SECTIONS : section % Global.PLAYER_TILE_SECTIONS;
-            if(board[y][x] == Tile.SMALL_PELLET){
-                consumeSmallPellet(board);
-            }
+
         }
     }
 
-    public void consumeSmallPellet(Tile[][] board){
+    public void consumeSmallPellet(Tile[][] board) {
         consumedSmallPellets++;
         board[y][x] = Tile.STRAIGHT;
+        System.out.println(consumedSmallPellets);
     }
 
     public int getConsumedSmallPellets() {
@@ -135,5 +151,10 @@ public class Player {
             case LEFT, RIGHT ->
                     new float[]{(float) section / Global.PLAYER_TILE_SECTIONS * Global.TILE_SIZE, Global.TILE_SIZE / 2f};
         };
+    }
+
+    public boolean hit() {
+        numLives--;
+        return numLives == 0;
     }
 }
