@@ -15,4 +15,15 @@ public class Global {
 
     public static final int PLAYER_TILE_SECTIONS = 15;
 
+    public static final int[][] GHOST_SCATTER_LOCATIONS = new int[][] {//{ghost, row/col}
+            //{row,col}
+            //Blinky
+            {31, 28},
+            //Pinky
+            {31,0},
+            //Inky
+            {0,28},
+            //Clyde
+            {0,0}
+    };
 }
