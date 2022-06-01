@@ -10,6 +10,7 @@ public class Player {
     private int numLives;
     private boolean isEnergized;
     private Timer energizeTimer;
+    private int pelletsConsumedLastCycle;
 
     public Player() {
         x = 14;
@@ -21,6 +22,7 @@ public class Player {
         numLives = 3;
         isEnergized = false;
         energizeTimer = new Timer();
+        pelletsConsumedLastCycle = 0;
     }
 
     //<editor-fold desc="setters & getters">
@@ -61,6 +63,10 @@ public class Player {
     }
 
     //</editor-fold>
+
+    public int getPelletsConsumedThisCycle(){
+        return consumedSmallPellets - pelletsConsumedLastCycle;
+    }
 
     public void move(Tile[][] board) {
         if (energizeTimer.getSeconds() == 5) {
@@ -155,6 +161,7 @@ public class Player {
 
     public boolean hit() {
         numLives--;
+        pelletsConsumedLastCycle = consumedSmallPellets;
         return numLives == 0;
     }
 }
