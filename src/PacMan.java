@@ -4,15 +4,18 @@ import java.util.Scanner;
 
 public class PacMan {
 
-    private Blinky blinky;
-    private Inky inky;
-    private Pinky pinky;
-    private Clyde clyde;
+    private Ghost blinky;
+    private Ghost inky;
+    private Ghost pinky;
+    private Ghost clyde;
 
     private Player player;
 
-    private Tile[][] ghostBoard;
-    private Tile[][] playerBoard;
+    private final Tile[][] ghostBoard;
+    private final Tile[][] playerBoard;
+    private Timer timer;
+    private Ghost[] ghosts;
+    private boolean isStarted;
 
     public PacMan() throws FileNotFoundException {
         player = new Player();
@@ -20,10 +23,14 @@ public class PacMan {
         playerBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
         initializeGhostBoard();
         initializePlayerBoard();
-        blinky = new Blinky(1, 1, Direction.RIGHT, 25, 25, true);
-        inky = new Inky(1, 27, Direction.DOWN, 25, 25, false);
-        pinky = new Pinky(20, 1, Direction.LEFT, 25, 25, false);
-        clyde = new Clyde(1, 1, Direction.RIGHT, 25, 25, false);
+        blinky = new Blinky(14, 19, Direction.RIGHT, 15, 15, true, false);
+        pinky = new Pinky(14, 16, Direction.UP, 0, 15, false, true);
+        inky = new Inky(12, 16, Direction.UP, 0, 15, false, false);
+        clyde = new Clyde(16, 16, Direction.UP, 0, 15, false, false);
+        ghosts = new Ghost[] {blinky, pinky, inky, clyde};
+        timer = new Timer();
+        timer.start();
+        isStarted = false;
     }
 
     public Player getPlayer() {
@@ -42,8 +49,20 @@ public class PacMan {
         return inky;
     }
 
-    public Clyde getClyde() {
+    public Ghost getClyde() {
         return clyde;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public void setStarted(Boolean b){
+        isStarted = b;
+    }
+
+    public void start(){
+        isStarted = true;
     }
 
     public Tile[][] getGhostBoard() {
@@ -85,14 +104,42 @@ public class PacMan {
     }
 
     public void update() {
-        player.move(playerBoard);
-        if(player.getConsumedSmallPellets() > 30 && !inky.isReleased()){
-            inky.release();
+        if (isStarted) {
+            player.move(playerBoard);
+            if(player.getConsumedSmallPellets() > 30){
+                inky.release();
+            }
+            if(player.getConsumedSmallPellets() > 60){
+                clyde.release();
+            }
+            blinky.update(ghostBoard, player, (Blinky)blinky);
+            inky.update(ghostBoard, player, (Blinky)blinky);
+            pinky.update(ghostBoard, player, (Blinky)blinky);
+            clyde.update(ghostBoard, player, (Blinky)blinky);
+            for(Ghost g : ghosts){
+                if(g.getX() == player.getX() && g.getY() == player.getY()){
+                    if(player.hit()){
+                        System.out.println("cool");
+                    }
+                    for(Ghost j : ghosts){
+                        //j.setMovementMode(MovementMode.Scatter);
+                    }
+                    break;
+                }
+                MovementMode m = null;
+                switch (timer.getSeconds()){
+                    case 7, 34, 59, 84 -> m = MovementMode.Chase;
+                    case 0, 27, 54, 79 -> m = MovementMode.Scatter;
+                }
+                if(m != null){
+                    for(Ghost j : ghosts){
+                        j.setMovementMode(m);
+                    }
+                }
+            }
+            timer.iterate();
         }
-        blinky.update(ghostBoard, player);
-        inky.update(ghostBoard, player, blinky);
-        pinky.update(ghostBoard, player);
-        clyde.update(ghostBoard, player, blinky);
+
     }
 
 }
