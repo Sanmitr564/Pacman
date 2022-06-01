@@ -80,11 +80,9 @@ public class FirstDrawing extends ApplicationAdapter implements InputProcessor {
 
                 switch(pacman.getPlayerBoard()[row][col]){
                     case WALL -> renderer.setColor(Color.BLUE);
-                    case STRAIGHT -> renderer.setColor(Color.BLACK);
-                    case JUNCTION -> renderer.setColor(Color.CYAN);
-                    case SPECIAL_JUNCTION -> renderer.setColor(Color.PINK);
-                    case TELEPORT -> renderer.setColor(Color.WHITE);
+                    case STRAIGHT, GHOST_AREA, TELEPORT -> renderer.setColor(Color.BLACK);
                     case SMALL_PELLET -> renderer.setColor(Color.OLIVE);
+                    case BIG_PELLET -> renderer.setColor(Color.TEAL);
                     default -> renderer.setColor(Color.GREEN);
                 }
                 renderer.rect(Global.FIELD_X + col * (Global.TILE_SIZE), Global.FIELD_Y + row * (Global.TILE_SIZE), Global.TILE_SIZE, Global.TILE_SIZE);
@@ -148,6 +146,7 @@ public class FirstDrawing extends ApplicationAdapter implements InputProcessor {
             case Input.Keys.RIGHT -> pacman.getPlayer().setQueuedDirection(Direction.RIGHT);
             case Input.Keys.DOWN -> pacman.getPlayer().setQueuedDirection(Direction.DOWN);
         }
+        pacman.start();
         return false;
     }
 
