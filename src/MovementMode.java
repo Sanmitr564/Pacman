@@ -1,3 +1,3 @@
 public enum MovementMode {
-    Chase, Scatter, Frightened
+    CHASE, SCATTER, FRIGHTENED
 }
