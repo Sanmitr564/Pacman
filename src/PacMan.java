@@ -23,10 +23,10 @@ public class PacMan {
         playerBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
         initializeGhostBoard();
         initializePlayerBoard();
-        blinky = new Blinky(14, 19, Direction.RIGHT, 15, 15, true, false);
-        pinky = new Pinky(14, 16, Direction.UP, 0, 15, false, true);
-        inky = new Inky(12, 16, Direction.UP, 0, 15, false, false);
-        clyde = new Clyde(16, 16, Direction.UP, 0, 15, false, false);
+        blinky = new Blinky(14, 19, Direction.RIGHT, 0, 11, true, false);
+        pinky = new Pinky(14, 16, Direction.UP, 0, 12, false, true);
+        inky = new Inky(12, 16, Direction.UP, 0, 12, false, false);
+        clyde = new Clyde(16, 16, Direction.UP, 0, 12, false, false);
         ghosts = new Ghost[] {blinky, pinky, inky, clyde};
         timer = new Timer();
         timer.start();
@@ -106,10 +106,19 @@ public class PacMan {
     public void update() {
         if (isStarted) {
             player.move(playerBoard);
-            if(player.getConsumedSmallPellets() > 30){
+            if(player.getPelletsConsumedThisCycle() >= 7){
+                pinky.release();
+            }
+            if(player.getConsumedSmallPellets() >= 30 && player.getNumLives() == 3){
                 inky.release();
             }
-            if(player.getConsumedSmallPellets() > 60){
+            if(player.getPelletsConsumedThisCycle() >= 17 && player.getNumLives() < 3){
+                inky.release();
+            }
+            if(player.getConsumedSmallPellets() >= 60 && player.getNumLives() == 3){
+                clyde.release();
+            }
+            if(player.getPelletsConsumedThisCycle() >= 32 && player.getNumLives() < 3){
                 clyde.release();
             }
             blinky.update(ghostBoard, player, (Blinky)blinky);
@@ -121,15 +130,13 @@ public class PacMan {
                     if(player.hit()){
                         System.out.println("cool");
                     }
-                    for(Ghost j : ghosts){
-                        //j.setMovementMode(MovementMode.Scatter);
-                    }
+                    softReset();
                     break;
                 }
                 MovementMode m = null;
                 switch (timer.getSeconds()){
-                    case 7, 34, 59, 84 -> m = MovementMode.Chase;
-                    case 0, 27, 54, 79 -> m = MovementMode.Scatter;
+                    case 7, 34, 59, 84 -> m = MovementMode.CHASE;
+                    case 0, 27, 54, 79 -> m = MovementMode.SCATTER;
                 }
                 if(m != null){
                     for(Ghost j : ghosts){
@@ -140,6 +147,18 @@ public class PacMan {
             timer.iterate();
         }
 
+    }
+
+    private void softReset(){
+        player.softReset();
+        blinky = new Blinky(14, 19, Direction.RIGHT, 0, 11, true, false);
+        pinky = new Pinky(14, 16, Direction.UP, 0, 12, false, false);
+        inky = new Inky(12, 16, Direction.UP, 0, 12, false, false);
+        clyde = new Clyde(16, 16, Direction.UP, 0, 12, false, false);
+        ghosts = new Ghost[] {blinky, pinky, inky, clyde};
+        timer = new Timer();
+        timer.start();
+        isStarted = false;
     }
 
 }

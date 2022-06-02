@@ -17,7 +17,7 @@ public class Player {
         y = 7;
         direction = Direction.LEFT;
         queuedDirection = Direction.LEFT;
-        section = Global.PLAYER_TILE_SECTIONS / 2;
+        section = 0;
         consumedSmallPellets = 0;
         numLives = 3;
         isEnergized = false;
@@ -62,11 +62,16 @@ public class Player {
         this.section = section;
     }
 
-    //</editor-fold>
-
     public int getPelletsConsumedThisCycle(){
         return consumedSmallPellets - pelletsConsumedLastCycle;
     }
+
+    public int getNumLives() {
+        return numLives;
+    }
+
+    //</editor-fold>
+
 
     public void move(Tile[][] board) {
         if (energizeTimer.getSeconds() == 5) {
@@ -87,7 +92,7 @@ public class Player {
             if (t == Tile.WALL || t == null) {
                 return;
             }
-        } else if (DirectionHelp.oppositeDirections(direction, queuedDirection)) {
+        } else if (Direction.oppositeDirections(direction, queuedDirection)) {
             tryChangeDirection(board);
         }
         if (board[y][x] == Tile.SMALL_PELLET) {
@@ -134,7 +139,7 @@ public class Player {
 
     private Tile tryGetTile(Tile[][] board) {
         try {
-            int[] offset = DirectionHelp.getOffsets(queuedDirection);
+            int[] offset = queuedDirection.getOffsets();
             return board[y + offset[0]][x + offset[1]];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -143,7 +148,7 @@ public class Player {
 
     private Tile tryGetTile(Tile[][] board, Direction d) {
         try {
-            int[] offset = DirectionHelp.getOffsets(d);
+            int[] offset = d.getOffsets();
             return board[y + offset[0]][x + offset[1]];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -163,5 +168,15 @@ public class Player {
         numLives--;
         pelletsConsumedLastCycle = consumedSmallPellets;
         return numLives == 0;
+    }
+
+    public void softReset(){
+        x = 14;
+        y = 7;
+        direction = Direction.LEFT;
+        queuedDirection = Direction.LEFT;
+        section = 0;
+        isEnergized = false;
+        energizeTimer = new Timer();
     }
 }
