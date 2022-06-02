@@ -29,7 +29,7 @@ abstract public class Ghost {
         this.released = released;
         isTurnaroundQueued = false;
         this.isExiting = isExiting;
-        movementMode = MovementMode.Scatter;
+        movementMode = MovementMode.SCATTER;
     }
 
     public int getX() {
@@ -41,7 +41,7 @@ abstract public class Ghost {
     }
 
     public void setMovementMode(MovementMode movementMode) {
-        if(this.movementMode == MovementMode.Chase && movementMode != MovementMode.Chase){
+        if(this.movementMode != MovementMode.FRIGHTENED && this.movementMode != movementMode){
             direction = DirectionHelp.getOppositeDirection(direction);
         }
         this.movementMode = movementMode;
@@ -56,6 +56,7 @@ abstract public class Ghost {
     }
 
     protected abstract void setTargetPos(Player player, Blinky blinky);
+    protected abstract void scatter();
     public boolean isReleased() {
         return released;
     }
@@ -70,23 +71,18 @@ abstract public class Ghost {
 
     public final void update(Tile[][] board, Player player, Blinky blinky) {
         if(!isExiting && released) {
-            if(movementMode == MovementMode.Chase){
-                setTargetPos(player, blinky);
-                updateDirection(board, targetRow, targetCol);
-            }else if(movementMode == MovementMode.Scatter){
-                if(this instanceof Blinky){
-                    updateDirection(board, Global.GHOST_SCATTER_LOCATIONS[0][0], Global.GHOST_SCATTER_LOCATIONS[0][1]);
-                }else if (this instanceof Pinky){
-                    updateDirection(board, Global.GHOST_SCATTER_LOCATIONS[1][0], Global.GHOST_SCATTER_LOCATIONS[1][1]);
-                }else if (this instanceof Inky){
-                    updateDirection(board, Global.GHOST_SCATTER_LOCATIONS[2][0], Global.GHOST_SCATTER_LOCATIONS[2][1]);
-                }else if(this instanceof Clyde){
-                    updateDirection(board, Global.GHOST_SCATTER_LOCATIONS[3][0], Global.GHOST_SCATTER_LOCATIONS[3][1]);
+            FrightenedBreak:
+            {
+                if (movementMode == MovementMode.CHASE) {
+                    setTargetPos(player, blinky);
+                } else if (movementMode == MovementMode.SCATTER) {
+                    scatter();
+                } else if (movementMode == MovementMode.FRIGHTENED) {
+                    updateRandomDirection(board);
+                    break FrightenedBreak;
                 }
-            }else if(movementMode == MovementMode.Frightened){
-
+                updateDirection(board, targetRow, targetCol);
             }
-
         }else if(isExiting && !released){
             int[] offsets = DirectionHelp.getOffsets(direction);
             if(board[y][x+offsets[1]] != Tile.GHOST_AREA && board[y][x+offsets[1]] != Tile.GHOST_HOUSE_JUNCTION && board[y][x+offsets[1]] != Tile.GHOST_DOOR && board[y][x+offsets[1]] != Tile.STRAIGHT){
