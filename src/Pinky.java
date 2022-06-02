@@ -11,4 +11,9 @@ public class Pinky extends Ghost{
         setTargetCol(player.getX() + offsets[1] * 4);
     }
 
+    @Override
+    protected void scatter(){
+        setTargetRow(Global.GHOST_SCATTER_LOCATIONS[1][0]);
+        setTargetCol(Global.GHOST_SCATTER_LOCATIONS[1][1]);
+    }
 }

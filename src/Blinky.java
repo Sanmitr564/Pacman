@@ -10,5 +10,9 @@ public class Blinky extends Ghost{
         setTargetRow(player.getY());
     }
 
-
+    @Override
+    protected void scatter(){
+        setTargetRow(Global.GHOST_SCATTER_LOCATIONS[0][0]);
+        setTargetCol(Global.GHOST_SCATTER_LOCATIONS[0][1]);
+    }
 }

@@ -13,4 +13,9 @@ public class Inky extends Ghost{
         setTargetCol(targetCol);
     }
 
+    @Override
+    protected void scatter(){
+        setTargetRow(Global.GHOST_SCATTER_LOCATIONS[2][0]);
+        setTargetCol(Global.GHOST_SCATTER_LOCATIONS[2][1]);
+    }
 }
