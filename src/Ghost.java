@@ -40,9 +40,13 @@ abstract public class Ghost {
         return y;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
     public void setMovementMode(MovementMode movementMode) {
         if(this.movementMode != MovementMode.FRIGHTENED && this.movementMode != movementMode){
-            direction = DirectionHelp.getOppositeDirection(direction);
+            direction = direction.getOppositeDirection();
         }
         this.movementMode = movementMode;
     }
@@ -84,11 +88,11 @@ abstract public class Ghost {
                 updateDirection(board, targetRow, targetCol);
             }
         }else if(isExiting && !released){
-            int[] offsets = DirectionHelp.getOffsets(direction);
+            int[] offsets = direction.getOffsets();
             if(board[y][x+offsets[1]] != Tile.GHOST_AREA && board[y][x+offsets[1]] != Tile.GHOST_HOUSE_JUNCTION && board[y][x+offsets[1]] != Tile.GHOST_DOOR && board[y][x+offsets[1]] != Tile.STRAIGHT){
-                direction = DirectionHelp.getOppositeDirection(direction);
+                direction = direction.getOppositeDirection();
             }
-            if(section == numSections/2 && board[y][x] == Tile.GHOST_HOUSE_JUNCTION && DirectionHelp.isVertical(direction) && x != 14){
+            if(section == numSections/2 && board[y][x] == Tile.GHOST_HOUSE_JUNCTION && direction.isVertical() && x != 14){
                 if(this instanceof Inky){
                     direction = Direction.RIGHT;
                 }else if(this instanceof Clyde){
@@ -103,9 +107,9 @@ abstract public class Ghost {
                 section = 0;
             }
         }else if(!isExiting){
-            int[] offsets = DirectionHelp.getOffsets(direction);
+            int[] offsets = direction.getOffsets();
             if(board[y][x+offsets[1]] != Tile.GHOST_AREA && board[y][x+offsets[1]] != Tile.GHOST_HOUSE_JUNCTION){
-                direction = DirectionHelp.getOppositeDirection(direction);
+                direction = direction.getOppositeDirection();
             }
         }
 
@@ -114,7 +118,7 @@ abstract public class Ghost {
 
     protected void move() {
         if(isTurnaroundQueued){
-            direction = DirectionHelp.getOppositeDirection(direction);
+            direction = direction.getOppositeDirection();
             isTurnaroundQueued = false;
         }
         switch (direction) {
@@ -190,7 +194,7 @@ abstract public class Ghost {
 
     private Tile tryGetTile(Tile[][] board) {
         try {
-            int[] offset = DirectionHelp.getOffsets(direction);
+            int[] offset = direction.getOffsets();
             return board[y + offset[0]][x + offset[1]];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -199,7 +203,7 @@ abstract public class Ghost {
 
     private Tile tryGetTile(Tile[][] board, Direction d) {
         try {
-            int[] offset = DirectionHelp.getOffsets(d);
+            int[] offset = d.getOffsets();
             return board[y + offset[0]][x + offset[1]];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -209,7 +213,7 @@ abstract public class Ghost {
     private Direction[] getValidDirections(Tile[][] board) {
         List<Direction> directions = new ArrayList<>();
         for (int i = 0; i < Direction.values().length; i++) {
-            if (Direction.values()[i] == DirectionHelp.getOppositeDirection(direction)) {
+            if (Direction.values()[i] == direction.getOppositeDirection()) {
                 continue;
             }
             Tile t = tryGetTile(board, Direction.values()[i]);
@@ -270,7 +274,7 @@ abstract public class Ghost {
         List<Direction> directions = new ArrayList<>();
         for (int i = 0; i < Direction.values().length; i++) {
             if (
-                    Direction.values()[i] == DirectionHelp.getOppositeDirection(direction) ||
+                    Direction.values()[i] == direction.getOppositeDirection() ||
                             Direction.values()[i] == Direction.UP
             ) {
                 continue;
@@ -286,12 +290,12 @@ abstract public class Ghost {
     }
 
     protected int getDistance(Direction d, Player player) {
-        int[] offsets = DirectionHelp.getOffsets(d);
+        int[] offsets = d.getOffsets();
         return ((player.getX() - x + offsets[1]) * (player.getX() - x + offsets[1])) + (player.getY() - y + offsets[0]) * (player.getY() - y + offsets[0]);
     }
 
     protected int getDistance(Direction d, int targetRow, int targetCol) {
-        int[] offsets = DirectionHelp.getOffsets(d);
+        int[] offsets = d.getOffsets();
         return ((targetCol - x + offsets[1]) * (targetCol - x + offsets[1])) + (targetRow - y + offsets[0]) * (targetRow - y + offsets[0]);
     }
 

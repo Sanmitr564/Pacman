@@ -6,7 +6,7 @@ public class Pinky extends Ghost{
 
     @Override
     protected void setTargetPos(Player player, Blinky blinky) {
-        int[] offsets = DirectionHelp.getOffsets(player.getDirection());
+        int[] offsets = player.getDirection().getOffsets();
         setTargetRow(player.getY() + offsets[0] * 4);
         setTargetCol(player.getX() + offsets[1] * 4);
     }
