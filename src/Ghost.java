@@ -40,6 +40,30 @@ abstract public class Ghost {
         return y;
     }
 
+    protected void setX(int x){
+        this.x = x;
+    }
+
+    protected void setY(int y){
+        this.y = y;
+    }
+
+    public boolean isExiting() {
+        return isExiting;
+    }
+
+    public void setExiting(boolean exiting) {
+        isExiting = exiting;
+    }
+
+    protected void setDirection(Direction d){
+        direction = d;
+    }
+
+    protected void setSection(int section){
+        this.section = section;
+    }
+
     public Direction getDirection() {
         return direction;
     }
@@ -61,6 +85,7 @@ abstract public class Ghost {
 
     protected abstract void setTargetPos(Player player, Blinky blinky);
     protected abstract void scatter();
+    protected abstract void eatReset();
     public boolean isReleased() {
         return released;
     }
@@ -96,7 +121,7 @@ abstract public class Ghost {
                 if(this instanceof Inky){
                     direction = Direction.RIGHT;
                 }else if(this instanceof Clyde){
-                    direction = Direction.RIGHT;
+                    direction = Direction.LEFT;
                 }
             } else if (section == 0 && x == 14 && y == 16) {
                 direction = Direction.UP;
@@ -111,6 +136,10 @@ abstract public class Ghost {
             if(board[y][x+offsets[1]] != Tile.GHOST_AREA && board[y][x+offsets[1]] != Tile.GHOST_HOUSE_JUNCTION){
                 direction = direction.getOppositeDirection();
             }
+        }else if(section == numSections/2 && y == 19){
+            direction = Direction.LEFT;
+            isExiting = false;
+            section = 0;
         }
 
         move();
@@ -318,4 +347,10 @@ abstract public class Ghost {
             isExiting = true;
         }
     }
+
+    public void eat(){
+        eatReset();
+        isExiting = true;
+    }
+
 }
