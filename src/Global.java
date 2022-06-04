@@ -13,7 +13,9 @@ public class Global {
     public static final int FIELD_X = (WORLD_WIDTH - BOARD_WIDTH) / 2;
     public static final int FIELD_Y = (WORLD_HEIGHT - BOARD_HEIGHT) / 2;
 
-    public static final int PLAYER_TILE_SECTIONS = 15;
+    public static final int PLAYER_TILE_SECTIONS = 10;
+
+
 
     public static final int[][] GHOST_SCATTER_LOCATIONS = new int[][] {//{ghost, row/col}
             //{row,col}
