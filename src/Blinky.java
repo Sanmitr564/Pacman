@@ -15,4 +15,13 @@ public class Blinky extends Ghost{
         setTargetRow(Global.GHOST_SCATTER_LOCATIONS[0][0]);
         setTargetCol(Global.GHOST_SCATTER_LOCATIONS[0][1]);
     }
+
+    @Override
+    protected void eatReset(){
+        setX(14);
+        setY(16);
+        setSection(0);
+        setDirection(Direction.UP);
+        setExiting(true);
+    }
 }

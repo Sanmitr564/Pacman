@@ -23,4 +23,13 @@ public class Clyde extends Ghost{
         setTargetRow(Global.GHOST_SCATTER_LOCATIONS[3][0]);
         setTargetCol(Global.GHOST_SCATTER_LOCATIONS[3][1]);
     }
+
+    @Override
+    protected void eatReset(){
+        setX(16);
+        setY(16);
+        setSection(0);
+        setDirection(Direction.UP);
+        setExiting(true);
+    }
 }

@@ -18,4 +18,14 @@ public class Inky extends Ghost{
         setTargetRow(Global.GHOST_SCATTER_LOCATIONS[2][0]);
         setTargetCol(Global.GHOST_SCATTER_LOCATIONS[2][1]);
     }
+
+    @Override
+    protected void eatReset(){
+        setX(12);
+        setY(16);
+        setSection(0);
+        setDirection(Direction.UP);
+        setExiting(true);
+
+    }
 }
