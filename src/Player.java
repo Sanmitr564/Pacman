@@ -7,6 +7,8 @@ public class Player {
     private int section;
 
     private int consumedSmallPellets;
+
+    private int consumedLargePellets;
     private int numLives;
     private boolean isEnergized;
     private Timer energizeTimer;
@@ -23,6 +25,7 @@ public class Player {
         isEnergized = false;
         energizeTimer = new Timer();
         pelletsConsumedLastCycle = 0;
+        consumedLargePellets = 0;
     }
 
     //<editor-fold desc="setters & getters">
@@ -70,6 +73,10 @@ public class Player {
         return numLives;
     }
 
+    public boolean isEnergized() {
+        return isEnergized;
+    }
+
     //</editor-fold>
 
 
@@ -99,8 +106,8 @@ public class Player {
             consumeSmallPellet(board);
             return;
         } else if (board[y][x] == Tile.BIG_PELLET) {
-            isEnergized = true;
-            energizeTimer.start();
+            consumeLargePellet(board);
+            return;
         }
 
         switch (direction) {
@@ -118,6 +125,7 @@ public class Player {
             section = section < 0 ? section + Global.PLAYER_TILE_SECTIONS : section % Global.PLAYER_TILE_SECTIONS;
 
         }
+        energizeTimer.iterate();
     }
 
     public void consumeSmallPellet(Tile[][] board) {
@@ -126,6 +134,12 @@ public class Player {
         System.out.println(consumedSmallPellets);
     }
 
+    public void consumeLargePellet(Tile[][] board){
+        consumedLargePellets++;
+        board[y][x] = Tile.STRAIGHT;
+        energizeTimer.start();
+        isEnergized = true;
+    }
     public int getConsumedSmallPellets() {
         return consumedSmallPellets;
     }
@@ -165,8 +179,12 @@ public class Player {
     }
 
     public boolean hit() {
-        numLives--;
-        pelletsConsumedLastCycle = consumedSmallPellets;
+        if(isEnergized){
+
+        }else {
+            numLives--;
+            pelletsConsumedLastCycle = consumedSmallPellets;
+        }
         return numLives == 0;
     }
 
