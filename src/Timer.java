@@ -19,6 +19,10 @@ public class Timer {
         return totalFrames % 60;
     }
 
+    public boolean isPaused() {
+        return isPaused;
+    }
+
     public void iterate() {
         if(!isPaused) {
             totalFrames++;
