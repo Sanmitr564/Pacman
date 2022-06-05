@@ -13,12 +13,15 @@ abstract public class Ghost {
     private int section;
     private boolean released;
     private int numSections;
+    private int maxNumSections;
     private boolean isTurnaroundQueued;
     private boolean isReleasing;
     private boolean isExiting;
     private int targetCol;
     private int targetRow;
     private MovementMode movementMode;
+
+
     public Ghost(int x, int y, Direction direction, int section, int numSections, boolean released, boolean isExiting) {
         this.x = x;
         this.y = y;
@@ -26,6 +29,7 @@ abstract public class Ghost {
         this.section = section;
         this.direction = direction;
         this.numSections = numSections;
+        maxNumSections = numSections;
         this.released = released;
         isTurnaroundQueued = false;
         this.isExiting = isExiting;
@@ -70,7 +74,7 @@ abstract public class Ghost {
 
     public void setMovementMode(MovementMode movementMode) {
         if(this.movementMode != MovementMode.FRIGHTENED && this.movementMode != movementMode){
-            direction = direction.getOppositeDirection();
+            isTurnaroundQueued = true;
         }
         this.movementMode = movementMode;
     }
@@ -86,6 +90,7 @@ abstract public class Ghost {
     protected abstract void setTargetPos(Player player, Blinky blinky);
     protected abstract void scatter();
     protected abstract void eatReset();
+
     public boolean isReleased() {
         return released;
     }
@@ -142,19 +147,14 @@ abstract public class Ghost {
             section = 0;
         }
 
-        move();
+        move(player);
     }
 
-    protected void move() {
-        if(isTurnaroundQueued){
-            direction = direction.getOppositeDirection();
-            isTurnaroundQueued = false;
-        }
+    protected void move(Player player) {
         switch (direction) {
             case UP, RIGHT -> section++;
             case LEFT, DOWN -> section--;
         }
-
         if (section >= numSections || section < 0) {
             switch (direction) {
                 case RIGHT -> x++;
@@ -162,7 +162,16 @@ abstract public class Ghost {
                 case UP -> y++;
                 case DOWN -> y--;
             }
-            section = section < 0 ? section + numSections : section % numSections;
+            if(movementMode == MovementMode.FRIGHTENED){
+                numSections = (int)(maxNumSections * 1.5);
+            }else{
+                numSections = maxNumSections;
+            }
+            section = section < 0 ? numSections-1 : 0;
+            if(isTurnaroundQueued && released && !isExiting){
+                direction = direction.getOppositeDirection();
+                isTurnaroundQueued = false;
+            }
         }
     }
 
@@ -246,7 +255,7 @@ abstract public class Ghost {
                 continue;
             }
             Tile t = tryGetTile(board, Direction.values()[i]);
-            if (t != Tile.WALL && t != null) {
+            if (t != Tile.WALL && t != null && t != Tile.GHOST_DOOR) {
                 directions.add(Direction.values()[i]);
             }
         }
