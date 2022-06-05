@@ -12,6 +12,7 @@ public class PacMan {
     private Timer timer;
     private Ghost[] ghosts;
     private boolean isStarted;
+    private MovementMode queuedMovementMode;
 
     public PacMan(){
         player = new Player();
@@ -53,6 +54,10 @@ public class PacMan {
 
     public void setStarted(Boolean b) {
         isStarted = b;
+    }
+
+    public Ghost[] getGhosts() {
+        return ghosts;
     }
 
     public void start() {
@@ -101,14 +106,17 @@ public class PacMan {
                         break;
                     }
                 }
-                MovementMode m = null;
                 switch (timer.getSeconds()) {
-                    case 7, 34, 59, 84 -> m = MovementMode.CHASE;
-                    case 0, 27, 54, 79 -> m = MovementMode.SCATTER;
+                    case 7, 34, 59, 84 -> queuedMovementMode = MovementMode.CHASE;
+                    case 0, 27, 54, 79 -> queuedMovementMode = MovementMode.SCATTER;
                 }
-                if (m != null) {
+                if (!player.isEnergized()) {
                     for (Ghost j : ghosts) {
-                        j.setMovementMode(m);
+                        j.setMovementMode(queuedMovementMode);
+                    }
+                }else{
+                    for (Ghost j : ghosts) {
+                        j.setMovementMode(MovementMode.FRIGHTENED);
                     }
                 }
             }
