@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import java.io.FileNotFoundException;
 
 //NOTE: Always reset the JVM before compiling (it is the small loop arrow in the
 //bottom right corner of the project window)!!
@@ -33,11 +32,7 @@ public class FirstDrawing extends ApplicationAdapter implements InputProcessor {
         font = new BitmapFont();
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer
 
-        try {
-            pacman = new PacMan();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        pacman = new PacMan();
 
         Gdx.input.setInputProcessor(this);
     }
