@@ -1,7 +1,3 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 public class PacMan {
 
     private Ghost blinky;
@@ -17,12 +13,10 @@ public class PacMan {
     private Ghost[] ghosts;
     private boolean isStarted;
 
-    public PacMan() throws FileNotFoundException {
+    public PacMan(){
         player = new Player();
-        ghostBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
-        playerBoard = new Tile[Global.BOARD_ROWS][Global.BOARD_COLS];
-        initializeGhostBoard();
-        initializePlayerBoard();
+        ghostBoard = Global.GHOST_MAP;
+        playerBoard = Global.PLAYER_BOARD;
         blinky = new Blinky(14, 19, Direction.RIGHT, 0, 11, true, false);
         pinky = new Pinky(14, 16, Direction.UP, 0, 12, false, true);
         inky = new Inky(12, 16, Direction.UP, 0, 12, false, false);
@@ -71,36 +65,6 @@ public class PacMan {
 
     public Tile[][] getPlayerBoard() {
         return playerBoard;
-    }
-
-    private void initializeGhostBoard() throws FileNotFoundException {
-        File file = new File("C:/Users/Sanmitr/Documents/IdeaProjects/Pacman/src/ghostMap.txt");
-        Scanner scanner = new Scanner(file);
-        int row = Global.BOARD_ROWS - 1;
-        while (scanner.hasNextLine()) {
-            String str = scanner.nextLine();
-            for (int col = 0; col < str.length(); col++) {
-                char value = str.charAt(col);
-                int num = Integer.parseInt(String.valueOf(value));
-                ghostBoard[row][col] = Tile.values()[num];
-            }
-            row--;
-        }
-    }
-
-    private void initializePlayerBoard() throws FileNotFoundException {
-        File file = new File("C:/Users/Sanmitr/Documents/IdeaProjects/Pacman/src/playerMap.txt");
-        Scanner scanner = new Scanner(file);
-        int row = Global.BOARD_ROWS - 1;
-        while (scanner.hasNextLine()) {
-            String str = scanner.nextLine();
-            for (int col = 0; col < str.length(); col++) {
-                char value = str.charAt(col);
-                int num = Integer.parseInt(String.valueOf(value));
-                playerBoard[row][col] = Tile.values()[num];
-            }
-            row--;
-        }
     }
 
     public void update() {
