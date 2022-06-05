@@ -81,6 +81,7 @@ public class Player {
 
 
     public void move(Tile[][] board) {
+        energizeTimer.iterate();
         if (energizeTimer.getSeconds() == 5) {
             energizeTimer.reset();
             isEnergized = false;
@@ -123,9 +124,7 @@ public class Player {
                 case DOWN -> y--;
             }
             section = section < 0 ? section + Global.PLAYER_TILE_SECTIONS : section % Global.PLAYER_TILE_SECTIONS;
-
         }
-        energizeTimer.iterate();
     }
 
     public void consumeSmallPellet(Tile[][] board) {
@@ -137,6 +136,7 @@ public class Player {
     public void consumeLargePellet(Tile[][] board){
         consumedLargePellets++;
         board[y][x] = Tile.STRAIGHT;
+        energizeTimer.reset();
         energizeTimer.start();
         isEnergized = true;
     }
