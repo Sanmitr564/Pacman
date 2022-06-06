@@ -16,8 +16,10 @@ public class PacMan {
 
     public PacMan(){
         player = new Player();
-        ghostBoard = Global.GHOST_MAP;
-        playerBoard = Global.PLAYER_BOARD;
+        ghostBoard = new Tile[Global.GHOST_MAP.length][Global.GHOST_MAP[0].length];
+        playerBoard = new Tile[Global.PLAYER_BOARD.length][Global.PLAYER_BOARD[0].length];
+        clone2DArray(ghostBoard, Global.GHOST_MAP);
+        clone2DArray(playerBoard, Global.PLAYER_BOARD);
         blinky = new Blinky(14, 19, Direction.RIGHT, 0, 11, true, false);
         pinky = new Pinky(14, 16, Direction.UP, 0, 12, false, true);
         inky = new Inky(12, 16, Direction.UP, 0, 12, false, false);
@@ -137,4 +139,9 @@ public class PacMan {
         isStarted = false;
     }
 
+    private <T> void clone2DArray(T[][] copyArray, T[][] source){
+        for(int row = 0; row < source.length; row++){
+            System.arraycopy(source[row], 0, copyArray[row], 0, source[row].length);
+        }
+    }
 }
