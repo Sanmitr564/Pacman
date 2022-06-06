@@ -121,4 +121,6 @@ public class Global {
             Global.TETRIS_ICON_REGION.getRegionWidth() / Global.TETRIS_ICON_SCALE,
             Global.TETRIS_ICON_REGION.getRegionHeight() / Global.TETRIS_ICON_SCALE
     );
+
+    public static final Texture WHITE_PIXEL = new Texture("WhitePixel.png");
 }

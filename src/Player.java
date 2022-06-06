@@ -13,6 +13,8 @@ public class Player {
     private boolean isEnergized;
     private Timer energizeTimer;
     private int pelletsConsumedLastCycle;
+    private int score;
+    private int ghostsConsumedThisCycle;
 
     public Player() {
         x = 14;
@@ -26,6 +28,8 @@ public class Player {
         energizeTimer = new Timer();
         pelletsConsumedLastCycle = 0;
         consumedLargePellets = 0;
+        score = 0;
+        ghostsConsumedThisCycle = 0;
     }
 
     //<editor-fold desc="setters & getters">
@@ -75,6 +79,10 @@ public class Player {
 
     public boolean isEnergized() {
         return isEnergized;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     //</editor-fold>
@@ -130,7 +138,7 @@ public class Player {
     public void consumeSmallPellet(Tile[][] board) {
         consumedSmallPellets++;
         board[y][x] = Tile.STRAIGHT;
-        System.out.println(consumedSmallPellets);
+        score += 10;
     }
 
     public void consumeLargePellet(Tile[][] board){
@@ -139,6 +147,8 @@ public class Player {
         energizeTimer.reset();
         energizeTimer.start();
         isEnergized = true;
+        score += 50;
+        ghostsConsumedThisCycle = 0;
     }
     public int getConsumedSmallPellets() {
         return consumedSmallPellets;
@@ -196,5 +206,10 @@ public class Player {
         section = 0;
         isEnergized = false;
         energizeTimer = new Timer();
+    }
+
+    public void eatGhost(){
+        score += 200 * Math.pow(2,ghostsConsumedThisCycle);
+        ghostsConsumedThisCycle++;
     }
 }

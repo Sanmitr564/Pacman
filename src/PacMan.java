@@ -13,6 +13,7 @@ public class PacMan {
     private Ghost[] ghosts;
     private boolean isStarted;
     private MovementMode queuedMovementMode;
+    private boolean isGameOver;
 
     public PacMan(){
         player = new Player();
@@ -28,6 +29,7 @@ public class PacMan {
         timer = new Timer();
         timer.start();
         isStarted = false;
+        isGameOver = false;
     }
 
     public Player getPlayer() {
@@ -48,6 +50,10 @@ public class PacMan {
 
     public Ghost getClyde() {
         return clyde;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     public boolean isStarted() {
@@ -100,9 +106,11 @@ public class PacMan {
                 if (g.getX() == player.getX() && g.getY() == player.getY()) {
                     if (player.isEnergized()) {
                         g.eat();
+                        player.eatGhost();
                     } else {
                         if (player.hit()) {
-                            System.out.println("cool");
+                            isGameOver = true;
+                            return;
                         }
                         softReset();
                         break;
